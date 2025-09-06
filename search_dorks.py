@@ -21,17 +21,26 @@ def get_search_url(query, engine):
         return f"https://www.google.com/search?q={query}"  # default fallback
 
 def search_dorks(dorks, batch_size, engine):
-    """Open search engine queries in batches"""
+    """Open search engine queries in batches with jump support"""
     print(f"\nLoaded {len(dorks)} queries.")
     print(f"Using search engine: {engine.capitalize()}")
-    print("Press Enter to open next batch, or type q to quit.\n")
+    print("Controls: Press Enter = next batch | type q = quit | type number = jump to query number\n")
 
     index = 0
     while index < len(dorks):
         user_input = input(">> ")
+
         if user_input.lower() == "q":
             print("Exiting...")
             break
+        elif user_input.isdigit():
+            jump_to = int(user_input) - 1
+            if 0 <= jump_to < len(dorks):
+                index = jump_to
+                print(f"Jumping to query {jump_to+1}...")
+            else:
+                print("Invalid query number! Continuing...")
+                continue
 
         batch = dorks[index:index+batch_size]
         for dork in batch:
